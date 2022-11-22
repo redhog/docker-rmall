@@ -1,0 +1,9 @@
+#! /bin/bash
+
+docker network ls |
+  grep -v ID |
+  while read line; do
+    id="$(echo $line | sed -e "s/[^ ]\+ \+\([^ ]\+\) .*/\1/g")"
+    range="$(docker network inspect $id | grep "Subnet" | sed -e 's+.*: "\(.*\)".*+\1+g')"
+    echo "$line $range"
+  done
